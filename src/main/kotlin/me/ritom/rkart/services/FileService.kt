@@ -7,7 +7,7 @@ import java.io.FileNotFoundException
 
 @Component
 class FileService {
-    private val filePath = "~/Documents/rkart"
+    private val filePath = "/home/ritom/Documents/rkart/"
     fun saveFile(file:MultipartFile,filename:String) {
         val newFile = File("$filePath/$filename")
         newFile.createNewFile()

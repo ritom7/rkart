@@ -5,6 +5,7 @@ import me.ritom.rkart.mongo.ProductRepo
 import me.ritom.rkart.services.FileService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 import kotlin.jvm.optionals.getOrNull
 
 @RestController
@@ -33,5 +34,9 @@ class AdminController {
     @DeleteMapping("/admin/products/{id}")
     fun deleteProduct(@PathVariable("id") id:String) {
         repo.deleteById(id)
+    }
+    @PostMapping("/admin/storage/{id}")
+    fun uploadFile(@PathVariable id:String, @RequestBody file:MultipartFile) {
+        fileService.saveFile(file,id)
     }
 }
