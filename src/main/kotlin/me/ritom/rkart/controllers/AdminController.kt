@@ -4,6 +4,10 @@ import me.ritom.rkart.models.ProductModel
 import me.ritom.rkart.mongo.ProductRepo
 import me.ritom.rkart.services.FileService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.core.io.ByteArrayResource
+import org.springframework.http.HttpHeaders
+import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import kotlin.jvm.optionals.getOrNull
@@ -38,5 +42,18 @@ class AdminController {
     @PostMapping("/admin/storage/{id}")
     fun uploadFile(@PathVariable id:String, @RequestBody file:MultipartFile) {
         fileService.saveFile(file,id)
+    }
+    @GetMapping("/admin/storage/{id}")
+    fun downloadFile(@PathVariable id:String): ResponseEntity<ByteArrayResource> {
+        val headers = HttpHeaders()
+        headers.add(HttpHeaders.CONTENT_DISPOSITION,
+            "attachment; filename=$id")
+        val file = fileService.getFile(id)
+        val resource = ByteArrayResource(file.readBytes())
+        return ResponseEntity.ok()
+            .headers(headers)
+            .contentLength(file.length())
+            .contentType(MediaType.APPLICATION_OCTET_STREAM)
+            .body(resource);
     }
 }
